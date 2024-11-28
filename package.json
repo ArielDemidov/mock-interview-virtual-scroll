@@ -1,0 +1,19 @@
+{
+  "name": "harmony-mock-interview-virtual-scroll",
+  "version": "1.0.0",
+  "description": "> https://doc.clickup.com/3853550/d/h/3nk7e-55535/675f71c67f4f21e",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12"
+  }
+}
