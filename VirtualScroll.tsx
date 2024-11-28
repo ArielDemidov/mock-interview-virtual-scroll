@@ -26,7 +26,7 @@ const VirtualScroll: React.FC<Props> = ({ itemHeight, items, viewportHeight, buf
         if (isPrevIntersecting)
             setOffset(offset - extraOffsetItems > 0 ? offset - extraOffsetItems : 0)
         if (isNextIntersecting)
-            setOffset((offset + onScreenItems + extraOffsetItems) < items.length ? offset + onScreenItems + extraOffsetItems : offset + onScreenItems)
+            setOffset((offset + onScreenItems + extraOffsetItems) < items.length ? offset + onScreenItems + extraOffsetItems : offset + onScreenItems) // I think I have an infinite rendering loop here
     }, [isPrevIntersecting, isNextIntersecting])
 
     return (
