@@ -1,4 +1,4 @@
-import React, { ReactHTMLElement, useMemo, useRef, useState } from 'react'
+import React, { ReactHTMLElement, useEffect, useMemo, useRef, useState } from 'react'
 import useIsInViewport from './useIsInViewport'
 
 type Props = {
@@ -11,10 +11,10 @@ type Props = {
 const VirtualScroll: React.FC<Props> = ({ itemHeight, items, viewportHeight, buffer = .2 }) => {
     const [offset, setOffset] = useState(0)
 
-    const prevListItem = useRef<HTMLElement | null>(null)
+    const prevListItem = useRef<HTMLDivElement | null>(null)
     const isPrevIntersecting = useIsInViewport(prevListItem)
 
-    const nextListItem = useRef<HTMLElement | null>(null)
+    const nextListItem = useRef<HTMLDivElement | null>(null)
     const isNextIntersecting = useIsInViewport(nextListItem)
 
     const onScreenItems = useMemo(() =>
@@ -22,12 +22,21 @@ const VirtualScroll: React.FC<Props> = ({ itemHeight, items, viewportHeight, buf
 
     const extraOffsetItems = useMemo(() => Math.ceil(onScreenItems * buffer), [itemHeight, items, buffer])
 
+    useEffect(() => {
+        if (isPrevIntersecting)
+            setOffset(offset - extraOffsetItems > 0 ? offset - extraOffsetItems : 0)
+        if (isNextIntersecting)
+            setOffset((offset + onScreenItems + extraOffsetItems) < items.length ? offset + onScreenItems + extraOffsetItems : offset + onScreenItems)
+    }, [isPrevIntersecting, isNextIntersecting])
+
     return (
         <div style={{ height: viewportHeight }}>
             {items.slice(
                 (offset - extraOffsetItems) > 0 ? offset - extraOffsetItems : 0,
                 (offset + onScreenItems + extraOffsetItems) < items.length ? offset + onScreenItems + extraOffsetItems : items.length)
                 .map((item, i: number) => {
+                    if (i + 1 === offset) return (<div key={i} style={{ height: itemHeight }} ref={prevListItem}>{item}</div>)
+                    if (i - 1 === offset + onScreenItems) return (<div key={i} style={{ height: itemHeight }} ref={nextListItem}>{item}</div>)
                     return (<div key={i} style={{ height: itemHeight }}>{item}</div>)
                 })
             }
